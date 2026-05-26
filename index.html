@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+  <title>Second Life Computers | Refurbished Laptops</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      padding: 12px;
+      min-height: 100vh;
+      background: linear-gradient(145deg, #0a0f0c 0%, #121715 40%, #1e2a24 100%);
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 4px;
+    }
+
+    /* COMPACT MOBILE HEADER */
+    .logo-section {
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .logo-image {
+      width: 44px;
+      height: 44px;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 6px rgba(0,0,0,0.3));
+      border-radius: 12px;
+    }
+
+    .logo-text-container {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .logo-main {
+      font-size: 18px;
+      font-weight: 800;
+      color: #f5f9f0;
+      line-height: 1.2;
+      letter-spacing: -0.3px;
+    }
+
+    .logo-sub {
+      font-size: 9px;
+      font-weight: 500;
+      color: #86bf8c;
+      margin-top: 2px;
+    }
+
+    .find-title {
+      font-size: 17px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 10px;
+    }
+
+    /* MOBILE OPTIMIZED SEARCH */
+    .search-box {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 14px;
+      border: 1px solid #3a4d3e;
+      border-radius: 40px;
+      background: #1e2a24;
+      color: #f0f7ed;
+      outline: none;
+      margin-bottom: 16px;
+      -webkit-appearance: none;
+    }
+
+    .search-box:focus {
+      border-color: #5e9b6e;
+      box-shadow: 0 0 0 2px rgba(94, 155, 110, 0.3);
+    }
+
+    .search-box::placeholder {
+      color: #8fa891;
+      font-size: 13px;
+    }
+
+    /* 2x2 GRID ON MOBILE - EXACTLY 4 CARDS VISIBLE AT A TIME (2 columns, 2 rows basically but scrollable) */
+    /* Using 2 columns so that on mobile it shows 2 cards per row = 2x2 visible area */
+    .laptops-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    /* For larger phones/tablets keep 2 columns for consistent 2x2 feel */
+    @media (min-width: 481px) and (max-width: 768px) {
+      .laptops-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+    }
+
+    /* Desktop: also 2 columns but wider cards */
+    @media (min-width: 769px) {
+      .laptops-grid {
+        grid-template-columns: repeat(2, 1fr);
+        max-width: 700px;
+        margin-left: auto;
+        margin-right: auto;
+        gap: 20px;
+      }
+    }
+
+    /* CLEAN CARD DESIGN - Shows Brand:, Model:, Processor: labels */
+    .laptop-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 12px 10px 12px 10px;
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+      transition: transform 0.12s ease;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .laptop-card:active {
+      transform: scale(0.97);
+    }
+
+    .image-wrapper {
+      width: 100%;
+      background: #f9fbf7;
+      border-radius: 14px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      aspect-ratio: 4 / 3;
+    }
+
+    .laptop-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #f9fbf7;
+      padding: 4px;
+    }
+
+    /* SPECS ON CARD WITH LABELS */
+    .card-spec {
+      margin-bottom: 6px;
+      font-size: 11px;
+      line-height: 1.4;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+    }
+
+    .spec-label {
+      font-weight: 800;
+      color: #2d5a44;
+      min-width: 65px;
+      font-size: 10px;
+      letter-spacing: 0.3px;
+    }
+
+    .spec-value {
+      color: #2c3e2f;
+      font-weight: 600;
+      font-size: 10px;
+      word-break: break-word;
+      flex: 1;
+    }
+
+    .card-price {
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px solid #e2ecd9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .price {
+      font-size: 15px;
+      font-weight: 800;
+      color: #2d6a4f;
+    }
+
+    .stock-badge {
+      font-size: 9px;
+      font-weight: 700;
+      color: #2b6e4c;
+      background: #e2f3e4;
+      padding: 3px 8px;
+      border-radius: 30px;
+    }
+
+    .tap-hint {
+      font-size: 8px;
+      color: #86bf8c;
+      text-align: center;
+      margin-top: 6px;
+    }
+
+    /* MODAL - FULL SPECS (RAM, STORAGE, GRAPHICS appear here) */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(8, 12, 9, 0.97);
+      backdrop-filter: blur(10px);
+      z-index: 1000;
+      overflow-y: auto;
+      padding: 12px;
+    }
+
+    .modal-content {
+      max-width: 560px;
+      margin: 16px auto;
+      background: #ffffff;
+      border-radius: 32px;
+      padding: 20px 18px 26px;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 14px;
+      right: 16px;
+      font-size: 28px;
+      font-weight: 400;
+      cursor: pointer;
+      color: #5b6e5a;
+      z-index: 12;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: #f0f2ed;
+    }
+
+    .modal-product-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #1f3f2c;
+      margin-bottom: 14px;
+      padding-right: 40px;
+      line-height: 1.25;
+    }
+
+    .slider-container {
+      position: relative;
+      margin-bottom: 14px;
+      border-radius: 24px;
+      overflow: hidden;
+      background: #f2f7ef;
+      aspect-ratio: 16 / 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slider-image {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: #fafdf7;
+      display: block;
+      cursor: pointer;
+      padding: 6px;
+    }
+
+    .slider-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(30, 40, 32, 0.7);
+      backdrop-filter: blur(4px);
+      color: white;
+      border: none;
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      font-size: 20px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.2s;
+      z-index: 8;
+    }
+
+    .prev-btn { left: 8px; }
+    .next-btn { right: 8px; }
+
+    .slider-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 12px;
+      margin-bottom: 16px;
+    }
+
+    .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 10px;
+      background: #cbdcc4;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .dot.active {
+      background: #2d6a4f;
+      width: 20px;
+      border-radius: 10px;
+    }
+
+    .modal-specs {
+      background: #f5f9f1;
+      padding: 14px 16px;
+      border-radius: 24px;
+      margin: 14px 0;
+      line-height: 1.65;
+      font-size: 13px;
+      font-weight: 500;
+      color: #2a3e2e;
+    }
+
+    .modal-price {
+      font-size: 28px;
+      font-weight: 800;
+      color: #2d6a4f;
+      margin: 10px 0 14px;
+    }
+
+    .contact-options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .contact-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 16px;
+      border-radius: 60px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    .call-btn { background: #1e3f2e; color: white; }
+    .whatsapp-btn { background: #25D366; color: white; }
+
+    .fullscreen-viewer {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000000;
+      z-index: 1200;
+      text-align: center;
+      padding: 20px;
+    }
+
+    .fullscreen-img {
+      max-width: 95%;
+      max-height: 90%;
+      margin-top: 8%;
+      object-fit: contain;
+    }
+
+    .close-fullscreen {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 40px;
+      color: white;
+      cursor: pointer;
+      background: rgba(0,0,0,0.5);
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .footer {
+      margin-top: 30px;
+      padding: 16px;
+      text-align: center;
+      border-top: 1px solid #334f3b;
+    }
+
+    .footer .logo-main {
+      font-size: 10px;
+      opacity: 0.7;
+      color: #cfebcf;
+    }
+
+    .no-results {
+      text-align: center;
+      padding: 40px 16px;
+      background: #ffffffdd;
+      backdrop-filter: blur(8px);
+      border-radius: 32px;
+      color: #517a5e;
+      font-weight: 500;
+      font-size: 13px;
+      grid-column: span 2;
+    }
+
+    .swipe-hint {
+      text-align: center;
+      font-size: 10px;
+      color: #7d8f7a;
+      margin-top: 6px;
+    }
+
+    /* Very small devices adjustment */
+    @media (max-width: 420px) {
+      body { padding: 8px; }
+      .laptops-grid { gap: 8px; }
+      .laptop-card { padding: 10px 8px; border-radius: 16px; }
+      .spec-label { font-size: 9px; min-width: 58px; }
+      .spec-value { font-size: 9px; }
+      .price { font-size: 14px; }
+      .stock-badge { font-size: 8px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+  <div class="logo-section">
+    <img src="assets/logo/image.png" alt="Second Life Computers" class="logo-image" onerror="this.src='https://placehold.co/200x200/2d6a4f/white?text=SL'">
+    <div class="logo-text-container">
+      <div class="logo-main">SECOND LIFE</div>
+      <div class="logo-sub">Renewed Laptops • Ready to Use</div>
+    </div>
+  </div>
+
+  <div class="find-title">🔍 Find Your Laptop</div>
+
+  <input type="text" id="searchInput" class="search-box" placeholder="Search by brand or model..." autocomplete="off">
+
+  <div id="laptopsContainer" class="laptops-grid"></div>
+
+  <div class="footer">
+    <div class="logo-main">Second Life Computers — Quality Refurbished</div>
+  </div>
+
+</div>
+
+<!-- Modal with Image Slider (full specs inside) -->
+<div id="imageModal" class="modal">
+  <div class="modal-content">
+    <span class="close-modal">&times;</span>
+    <div id="modalProductTitle" class="modal-product-title"></div>
+    
+    <div class="slider-container" id="sliderTouchZone">
+      <button class="slider-btn prev-btn">&#10094;</button>
+      <img id="sliderImage" class="slider-image" alt="Product view">
+      <button class="slider-btn next-btn">&#10095;</button>
+    </div>
+    
+    <div id="sliderDots" class="slider-dots"></div>
+    <div class="swipe-hint">← → Swipe to see more images</div>
+    
+    <div id="modalSpecs" class="modal-specs"></div>
+    <div id="modalPrice" class="modal-price"></div>
+    
+    <div class="contact-options">
+      <button class="contact-btn call-btn" id="callNowBtn">📞 Call +91 80550 06894</button>
+      <button class="contact-btn whatsapp-btn" id="whatsappNowBtn">💬 WhatsApp +91 80550 06894</button>
+    </div>
+  </div>
+</div>
+
+<!-- Fullscreen viewer -->
+<div id="fullscreenViewer" class="fullscreen-viewer">
+  <span class="close-fullscreen">&times;</span>
+  <img id="fullscreenImage" class="fullscreen-img" alt="Fullscreen">
+</div>
+
+<script>
+  // ============================================
+  // PRODUCT DATA - Card shows: Brand, Model, Processor (with labels)
+  // RAM, Storage, Graphics are hidden from card (appear only in modal)
+  // 2x2 grid = 2 columns, each card has clear labels
+  // ============================================
+  const products = [
+    {
+      id: 1,
+      name: "Lenovo V130",
+      brand: "Lenovo",
+      model: "V130-15",
+      processor: "Intel Core i3-7020U",
+      ram: "8GB DDR4",
+      storage: "480GB SSD",
+      graphics: "Intel HD Graphics",
+      screen: '15.6" HD',
+      price: 18500,
+      stock: "1 available",
+      thumbnail: "assets/laptop imgs/WhatsApp Image 2026-05-22 at 3.45.29 PM (1).jpeg",
+      images: [
+        "assets/laptop imgs/WhatsApp Image 2026-05-22 at 3.45.29 PM (1).jpeg",
+        "assets/laptop imgs/WhatsApp Image 2026-05-22 at 3.45.29 PM.jpeg",
+        "assets/laptop imgs/WhatsApp Image 2026-05-22 at 3.45.30 PM (1).jpeg",
+        "assets/laptop imgs/WhatsApp Image 2026-05-22 at 3.45.30 PM.jpeg"
+      ]
+    },
+    {
+      id: 2,
+      name: "Lenovo B41",
+      brand: "Lenovo",
+      model: "B41",
+      processor: "AMD A6-7310",
+      ram: "4GB DDR3",
+      storage: "120GB SSD + 500GB HDD",
+      graphics: "AMD Radeon R4",
+      screen: '14" HD',
+      price: 11500,
+      stock: "2 available",
+      thumbnail: "assets/laptop imgs/lenovo-b41.jpg",
+      images: [
+        "assets/laptop imgs/lenovo-b41-1.jpg",
+        "assets/laptop imgs/lenovo-b41-2.jpg",
+        "assets/laptop imgs/lenovo-b41-3.jpg",
+        "assets/laptop imgs/lenovo-b41-4.jpg"
+      ]
+    },
+    {
+      id: 3,
+      name: "Lenovo IP110",
+      brand: "Lenovo",
+      model: "IP110",
+      processor: "Intel Core i3-5005U",
+      ram: "4GB DDR3",
+      storage: "240GB SSD",
+      graphics: "Intel HD 5500",
+      screen: '15.6" HD LED',
+      price: 12500,
+      stock: "3 available",
+      thumbnail: "assets/laptop imgs/lenovo-ip110.jpg",
+      images: [
+        "assets/laptop imgs/lenovo-ip110-1.jpg",
+        "assets/laptop imgs/lenovo-ip110-2.jpg",
+        "assets/laptop imgs/lenovo-ip110-3.jpg",
+        "assets/laptop imgs/lenovo-ip110-4.jpg"
+      ]
+    },
+    {
+      id: 4,
+      name: "Asus X540Y",
+      brand: "ASUS",
+      model: "X540Y",
+      processor: "AMD Ryzen 5 2500U",
+      ram: "4GB DDR4",
+      storage: "120GB SSD + 1TB HDD",
+      graphics: "AMD Radeon Vega 8",
+      screen: '15.6" HD',
+      price: 12000,
+      stock: "1 available",
+      thumbnail: "assets/laptop imgs/asus-x540y.jpg",
+      images: [
+        "assets/laptop imgs/asus-x540y-1.jpg",
+        "assets/laptop imgs/asus-x540y-2.jpg",
+        "assets/laptop imgs/asus-x540y-3.jpg",
+        "assets/laptop imgs/asus-x540y-4.jpg"
+      ]
+    }
+  ];
+
+  // ============================================
+  // APPLICATION LOGIC - 2x2 grid with labeled specs
+  // ============================================
+  let currentProduct = null;
+  let currentImageIndex = 0;
+  let currentProductPriceFormatted = '';
+
+  const phoneNumberRaw = "918055006894";
+
+  function formatPrice(price) {
+    return '₹' + price.toLocaleString('en-IN');
+  }
+
+  function setImageFallback(imgElement, altText) {
+    if (!imgElement) return;
+    imgElement.onerror = function() {
+      if (!this.dataset.fallbackAttempt) {
+        this.dataset.fallbackAttempt = 'true';
+        this.src = `https://placehold.co/400x300/2d6a4f/white?text=${encodeURIComponent(altText || 'Laptop')}`;
+        this.style.objectFit = 'contain';
+      }
+    };
+    imgElement.style.objectFit = 'contain';
+  }
+
+  // Render cards with labels: Brand:, Model:, Processor:
+  function renderProducts(searchValue = '') {
+    const container = document.getElementById('laptopsContainer');
+    if (!container) return;
+    
+    let filtered = [...products];
+    if (searchValue.trim()) {
+      const term = searchValue.toLowerCase();
+      filtered = products.filter(p => 
+        p.name.toLowerCase().includes(term) || 
+        p.brand.toLowerCase().includes(term) ||
+        p.model.toLowerCase().includes(term) ||
+        p.processor.toLowerCase().includes(term)
+      );
+    }
+    
+    if (filtered.length === 0) {
+      container.innerHTML = '<div class="no-results">🔍 No laptops found. Try "Lenovo" or "Dell"</div>';
+      return;
+    }
+    
+    // Each card shows: Brand, Model, Processor with visible labels + Price + Stock
+    container.innerHTML = filtered.map(product => `
+      <div class="laptop-card" onclick="openProductModal(${product.id})">
+        <div class="image-wrapper">
+          <img src="${product.thumbnail}" alt="${product.brand}" class="laptop-image" loading="lazy" onerror="this.src='https://placehold.co/400x300/2d6a4f/white?text=${product.brand.charAt(0)}'">
+        </div>
+        
+        <div class="card-spec">
+          <span class="spec-label">Brand:</span>
+          <span class="spec-value">${product.brand}</span>
+        </div>
+        <div class="card-spec">
+          <span class="spec-label">Model:</span>
+          <span class="spec-value">${product.model}</span>
+        </div>
+        <div class="card-spec">
+          <span class="spec-label">Processor:</span>
+          <span class="spec-value">${product.processor}</span>
+        </div>
+        
+        <div class="card-price">
+          <span class="price">${formatPrice(product.price)}</span>
+          <span class="stock-badge">📦 ${product.stock}</span>
+        </div>
+        <div class="tap-hint">👆 Tap for details & images</div>
+      </div>
+    `).join('');
+
+    document.querySelectorAll('.laptop-image').forEach(img => {
+      setImageFallback(img, img.alt);
+    });
+  }
+
+  function updateSlider() {
+    if (!currentProduct) return;
+    const sliderImg = document.getElementById('sliderImage');
+    const dotsDiv = document.getElementById('sliderDots');
+    if (!sliderImg) return;
+    sliderImg.src = currentProduct.images[currentImageIndex];
+    sliderImg.alt = `${currentProduct.name}`;
+    sliderImg.style.objectFit = 'contain';
+    setImageFallback(sliderImg, currentProduct.name);
+    
+    if (dotsDiv) {
+      dotsDiv.innerHTML = currentProduct.images.map((_, idx) => `
+        <div class="dot ${idx === currentImageIndex ? 'active' : ''}" onclick="goToImage(${idx})"></div>
+      `).join('');
+    }
+  }
+
+  function changeImage(direction) {
+    if (!currentProduct || !currentProduct.images.length) return;
+    currentImageIndex = (currentImageIndex + direction + currentProduct.images.length) % currentProduct.images.length;
+    updateSlider();
+  }
+
+  function goToImage(index) {
+    if (!currentProduct) return;
+    currentImageIndex = Math.min(Math.max(0, index), currentProduct.images.length - 1);
+    updateSlider();
+  }
+
+  // Modal shows complete specs including RAM, Storage, Graphics
+  function openProductModal(productId) {
+    const found = products.find(p => p.id === productId);
+    if (!found) return;
+    currentProduct = found;
+    currentProductPriceFormatted = formatPrice(found.price);
+    currentImageIndex = 0;
+    
+    const modal = document.getElementById('imageModal');
+    const titleEl = document.getElementById('modalProductTitle');
+    const specsContainer = document.getElementById('modalSpecs');
+    const priceContainer = document.getElementById('modalPrice');
+    
+    if (titleEl) titleEl.innerText = `${found.brand} ${found.model}`;
+    
+    const modalSpecsHtml = `
+      <strong>⚙️ Complete Specifications</strong><br><br>
+      • <strong>Brand:</strong> ${found.brand}<br>
+      • <strong>Model:</strong> ${found.model}<br>
+      • <strong>Processor:</strong> ${found.processor}<br>
+      • <strong>RAM:</strong> ${found.ram}<br>
+      • <strong>Storage:</strong> ${found.storage}<br>
+      • <strong>Graphics:</strong> ${found.graphics}<br>
+      • <strong>Screen:</strong> ${found.screen}<br>
+      • <strong>Stock:</strong> ${found.stock}
+    `;
+    if (specsContainer) specsContainer.innerHTML = modalSpecsHtml;
+    if (priceContainer) priceContainer.innerText = currentProductPriceFormatted;
+    
+    updateSlider();
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function openFullscreenFromSlider() {
+    if (!currentProduct) return;
+    const fullDiv = document.getElementById('fullscreenViewer');
+    const fullImg = document.getElementById('fullscreenImage');
+    if (fullImg && currentProduct.images[currentImageIndex]) {
+      fullImg.src = currentProduct.images[currentImageIndex];
+      fullImg.style.objectFit = 'contain';
+      fullDiv.style.display = 'block';
+    }
+  }
+
+  function closeModal() {
+    document.getElementById('imageModal').style.display = 'none';
+    document.body.style.overflow = 'auto';
+    currentProduct = null;
+  }
+
+  function closeFullscreen() {
+    document.getElementById('fullscreenViewer').style.display = 'none';
+  }
+
+  function makeCall() {
+    window.location.href = 'tel:+918055006894';
+  }
+
+  function sendWhatsApp() {
+    if (!currentProduct) {
+      window.open(`https://wa.me/${phoneNumberRaw}?text=Hi%2C%20I'm%20interested%20in%20laptops`, '_blank');
+      return;
+    }
+    const specsBlock = `${currentProduct.brand} ${currentProduct.model}%0A• Processor: ${currentProduct.processor}%0A• RAM: ${currentProduct.ram}%0A• Storage: ${currentProduct.storage}%0A• Graphics: ${currentProduct.graphics}%0A• Screen: ${currentProduct.screen}%0A• Stock: ${currentProduct.stock}`;
+    const message = `Hi! I'm interested in: *${currentProduct.brand} ${currentProduct.model}*%0A%0A📋 *Specifications:*%0A${specsBlock}%0A%0A💰 *Price:* ${currentProductPriceFormatted}%0A📦 *Availability:* ${currentProduct.stock}%0A%0APlease share more details.`;
+    window.open(`https://wa.me/${phoneNumberRaw}?text=${encodeURIComponent(message)}`, '_blank');
+  }
+
+  window.changeImage = changeImage;
+  window.goToImage = goToImage;
+  window.openProductModal = openProductModal;
+  window.openFullscreenFromSlider = openFullscreenFromSlider;
+  window.makeCall = makeCall;
+  window.sendWhatsApp = sendWhatsApp;
+  window.closeModal = closeModal;
+
+  let touchStartX = 0;
+  function handleTouchStart(e) { touchStartX = e.changedTouches[0].clientX; }
+  function handleTouchEnd(e) {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) diff > 0 ? changeImage(1) : changeImage(-1);
+  }
+
+  function attachEvents() {
+    const sliderZone = document.getElementById('sliderTouchZone');
+    if (sliderZone) {
+      sliderZone.removeEventListener('touchstart', handleTouchStart);
+      sliderZone.removeEventListener('touchend', handleTouchEnd);
+      sliderZone.addEventListener('touchstart', handleTouchStart, { passive: false });
+      sliderZone.addEventListener('touchend', handleTouchEnd);
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    renderProducts();
+    
+    const searchInput = document.getElementById('searchInput');
+    let debounce;
+    searchInput.addEventListener('input', (e) => {
+      clearTimeout(debounce);
+      debounce = setTimeout(() => renderProducts(e.target.value), 250);
+    });
+    
+    document.querySelector('.close-modal').onclick = closeModal;
+    document.querySelector('.close-fullscreen').onclick = closeFullscreen;
+    
+    window.onclick = (e) => {
+      if (e.target === document.getElementById('imageModal')) closeModal();
+      if (e.target === document.getElementById('fullscreenViewer')) closeFullscreen();
+    };
+    
+    document.querySelector('.prev-btn').onclick = (e) => { e.stopPropagation(); changeImage(-1); };
+    document.querySelector('.next-btn').onclick = (e) => { e.stopPropagation(); changeImage(1); };
+    document.getElementById('sliderImage').onclick = openFullscreenFromSlider;
+    document.getElementById('callNowBtn').onclick = makeCall;
+    document.getElementById('whatsappNowBtn').onclick = sendWhatsApp;
+    
+    attachEvents();
+  });
+</script>
+</body>
+</html>
