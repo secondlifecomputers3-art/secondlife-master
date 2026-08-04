@@ -575,7 +575,7 @@
       storage: "512GB ssd",
       graphics: "Intel UHD 620",
       screen: '15.6 FHD',
-      price: "19,500",
+      price: 19500,
       stock: "1 available",
       thumbnail: "assets/laptop imgs/lenovo ip 330(1).jpeg",
       images: [
@@ -584,8 +584,7 @@
         "assets/laptop imgs/lenovo ip 330(3).jpeg",
         "assets/laptop imgs/lenovo ip 330(4).jpeg"
       ]
-    }
-    ,
+    },
     {
       id: 9,
       name: "Lenovo B-41",
@@ -596,7 +595,7 @@
       storage: "128GB ssd",
       graphics: "AMD Radeon R4 Graphics",
       screen: '14 HD',
-      price: "12,500",
+      price: 12500,
       stock: "1 available",
       thumbnail: "assets/laptop imgs/b41(1).jpeg",
       images: [
@@ -605,26 +604,7 @@
         "assets/laptop imgs/b41(3).jpeg",
         "assets/laptop imgs/b41.jpeg"
       ]
-    },{
-        //id: 10,
-        //name: "HP 15s-du3563TU",
-        //brand: "HP",
-        //model: "15s-du3563TU",
-        //processor: "11th Gen Intel Core i3-1125G4 @ 2.00GHz",
-        //ram: "8GB DDR4",
-        //storage: "512GB ssd",
-        //graphics: "Intel UHD Graphics",
-        //screen: '15.6 HD',
-        //price: "22,000",
-        //stock: "1 available",
-        //thumbnail: "assets/laptop imgs/HP 15s-du(2).png",
-        //images: [
-         // "assets/laptop imgs/HP 15s-du(2).png",
-         // "assets/laptop imgs/HP 15s-du(1).png",
-          //"assets/laptop imgs/HP 15s-du(3).png",
-          //"assets/laptop imgs/HP 15s-du(4).png"
-       // ]
-      },
+    }
   ];
 
   // ============================================
@@ -637,7 +617,9 @@
   const phoneNumberRaw = "918055006894";
 
   function formatPrice(price) {
-    return '₹' + price.toLocaleString('en-IN');
+    // Handle both number and string prices
+    const numPrice = typeof price === 'string' ? parseFloat(price.replace(/,/g, '')) : price;
+    return '₹' + numPrice.toLocaleString('en-IN');
   }
 
   function setImageFallback(imgElement, altText) {
@@ -657,10 +639,20 @@
     const container = document.getElementById('laptopsContainer');
     if (!container) return;
     
-    let filtered = [...products];
+    // Safety check - ensure all products have required fields
+    const safeProducts = products.map(p => ({
+      ...p,
+      brand: p.brand || 'Unknown',
+      model: p.model || 'Unknown',
+      processor: p.processor || 'Not specified',
+      thumbnail: p.thumbnail || 'https://placehold.co/400x300/2d6a4f/white?text=No+Image',
+      images: p.images && p.images.length > 0 ? p.images : [p.thumbnail || 'https://placehold.co/400x300/2d6a4f/white?text=No+Image']
+    }));
+    
+    let filtered = [...safeProducts];
     if (searchValue.trim()) {
       const term = searchValue.toLowerCase();
-      filtered = products.filter(p => 
+      filtered = safeProducts.filter(p => 
         p.name.toLowerCase().includes(term) || 
         p.brand.toLowerCase().includes(term) ||
         p.model.toLowerCase().includes(term) ||
@@ -677,7 +669,7 @@
     container.innerHTML = filtered.map(product => `
       <div class="laptop-card" onclick="openProductModal(${product.id})">
         <div class="image-wrapper">
-          <img src="${product.thumbnail}" alt="${product.brand}" class="laptop-image" loading="lazy" onerror="this.src='https://placehold.co/400x300/2d6a4f/white?text=${product.brand.charAt(0)}'">
+          <img src="${product.thumbnail}" alt="${product.brand}" class="laptop-image" loading="lazy" onerror="this.src='https://placehold.co/400x300/2d6a4f/white?text=${encodeURIComponent(product.brand.charAt(0))}'">
         </div>
         
         <div class="card-spec">
@@ -711,7 +703,13 @@
     const sliderImg = document.getElementById('sliderImage');
     const dotsDiv = document.getElementById('sliderDots');
     if (!sliderImg) return;
-    sliderImg.src = currentProduct.images[currentImageIndex];
+    
+    // Ensure currentImageIndex is within bounds
+    if (currentImageIndex >= currentProduct.images.length) {
+      currentImageIndex = 0;
+    }
+    
+    sliderImg.src = currentProduct.images[currentImageIndex] || currentProduct.thumbnail;
     sliderImg.alt = `${currentProduct.name}`;
     sliderImg.style.objectFit = 'contain';
     setImageFallback(sliderImg, currentProduct.name);
@@ -724,7 +722,7 @@
   }
 
   function changeImage(direction) {
-    if (!currentProduct || !currentProduct.images.length) return;
+    if (!currentProduct || !currentProduct.images || !currentProduct.images.length) return;
     currentImageIndex = (currentImageIndex + direction + currentProduct.images.length) % currentProduct.images.length;
     updateSlider();
   }
@@ -773,7 +771,7 @@
     if (!currentProduct) return;
     const fullDiv = document.getElementById('fullscreenViewer');
     const fullImg = document.getElementById('fullscreenImage');
-    if (fullImg && currentProduct.images[currentImageIndex]) {
+    if (fullImg && currentProduct.images && currentProduct.images[currentImageIndex]) {
       fullImg.src = currentProduct.images[currentImageIndex];
       fullImg.style.objectFit = 'contain';
       fullDiv.style.display = 'block';
